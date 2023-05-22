@@ -20,7 +20,7 @@ from llama_index import SimpleDirectoryReader, ServiceContext, LLMPredictor
 from llama_index import GPTVectorStoreIndex, GPTListIndex, GPTSimpleKeywordTableIndex
 from langchain.chat_models import ChatOpenAI
 
-
+from file_processing import clone_github_repo
 
 # load env
 load_dotenv()
@@ -72,9 +72,23 @@ def test_some_queries(list_index, vector_index, keyword_table_index):
     print(response)
 
 def main():
-    documents = load_docs('repos/workers')
-    nodes = parse_into_nodes(documents)
-    docstore = add_to_docsstore(nodes)
-    list_index, vector_index, keyword_table_index = define_multiple_indexes(nodes, docstore)
-    test_some_queries(list_index, vector_index, keyword_table_index)
+    clone_or_no = input("Do you want to clone a repository? (y/n)")
+    if clone_or_no == "y":
+        # clone repo
+        github_url = input("Enter the GitHub URL of the repository: ")
+        repo_name = github_url.split("/")[-1]
+        print("Cloning the repository...")
+        clone_github_repo(github_url, f"repos")
+    else:
+        print("Assuming you have cloned the repository already.")
+        print("Loading the repository...")
+        repo_name = "repos/llama-workers"
+        documents = load_docs('repos/workers')
+        print("Repository loaded.")
+    
+        # parse into nodes
+        nodes = parse_into_nodes(documents)
+        docstore = add_to_docsstore(nodes)
+        list_index, vector_index, keyword_table_index = define_multiple_indexes(nodes, docstore)
+        test_some_queries(list_index, vector_index, keyword_table_index)
     
