@@ -27,6 +27,16 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
+def git_repo_reader(repo_url):
+    """Read a git repository"""
+    reader = GithubRepositoryReader(
+        owner = "kodadot",
+        repo=repo_url,
+        github_token=GITHUB_TOKEN,
+        ignore_directories=[".git", ".github", "docs", "tests", "examples", "node_modules", "dist"],
+    )
+    documents = reader.load_data(branch="main")
+    return documents
 
 def load_docs(repo_url):
     """Load documents from a repository"""
@@ -64,7 +74,9 @@ def test_some_queries(list_index, vector_index, keyword_table_index):
     llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
     service_context_chatgpt = ServiceContext.from_defaults(llm_predictor=llm_predictor_chatgpt, chunk_size_limit=1024)
     query_engine = list_index.as_query_engine()
-    input_test = input("Enter question: ")
 
-    response = query_engine.query(input_test) 
-    print(response)
+    while (True):
+        input_test = input("Enter question: ")
+
+        response = query_engine.query(input_test) 
+        print(response)

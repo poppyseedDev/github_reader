@@ -1,11 +1,11 @@
 from file_processing import clone_github_repo
-from process_gpt import load_docs, parse_into_nodes, add_to_docsstore, define_multiple_indexes, test_some_queries
+from process_gpt import git_repo_reader, load_docs, parse_into_nodes, add_to_docsstore, define_multiple_indexes, test_some_queries
 import os
 
 def get_files_and_folders(directory):
     return os.listdir(directory)
 
-def main():
+def run_main():
     clone_or_no = input("Do you want to clone a repository? (y/n)")
     if clone_or_no == "y":
         # clone repo
@@ -29,4 +29,17 @@ def main():
         docstore = add_to_docsstore(nodes)
         list_index, vector_index, keyword_table_index = define_multiple_indexes(nodes, docstore)
         test_some_queries(list_index, vector_index, keyword_table_index)
+
+def main():
+    print("Loading the repository...")
+    documents= git_repo_reader("uniquery")
+    print("Repository loaded.")
+
+    # parse into nodes
+    nodes = parse_into_nodes(documents)
+    docstore = add_to_docsstore(nodes)
+    list_index, vector_index, keyword_table_index = define_multiple_indexes(nodes, docstore)
+    test_some_queries(list_index, vector_index, keyword_table_index)
+
+
     
