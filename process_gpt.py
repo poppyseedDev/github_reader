@@ -21,12 +21,7 @@ from llama_index import GPTVectorStoreIndex, GPTListIndex, GPTSimpleKeywordTable
 from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveChararacterTextSplitter
 
-from dotenv import load_dotenv
-
-# load env
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+from load_env_var import GITHUB_TOKEN, OPENAI_API_KEY
 
 def git_repo_reader(repo_owner, repo_url):
     """Read a git repository"""
@@ -46,9 +41,7 @@ def load_docs(repo_url):
     documents = reader.load_data()
 
     return documents
-    #index = GPTVectorStoreIndex.from_documents(docs)
 
-    #index.query("Explain each LlamaIndex class?")
 
 def chunk_data_into_smaller_docs(documents):
     """Chunk data into smaller documents"""
