@@ -15,6 +15,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter, MarkdownTextSplitter, TextSplitter
 from git import Repo
 from langchain.document_loaders import GitLoader
+from langchain.prompts import PromptTemplate
+from langchain.chains import RetrievalQA
 
 from load_env_var import OPENAI_API_KEY
 
@@ -53,10 +55,11 @@ def test_some_queries(list_index, vector_index, keyword_table_index):
 
 def gpt_answer(docs, query):
     #llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
+    llm = OpenAI(temperature=0.4, openai_api_key=OPENAI_API_KEY)
+    answerMe = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=docs.as_retriever())
+    answer = answerMe.run(query)
 
-    llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY)
-    #input = "Query: " + query + "\n" + "Context: "
-    chain = load_qa_chain(llm, chain_type="stuff")
-    answer = chain.run(input_documents=docs, question=query)
+    #chain = load_qa_chain(llm, chain_type="stuff")
+    #answer = chain.run(input_documents=docs, question=query)
     return answer
 
