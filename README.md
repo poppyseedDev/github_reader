@@ -3,7 +3,7 @@ Create a empty dir `repos`.
 Create .env similar to .env.example
 Run:
 ```
-python3 app.py
+streamlit run app.py
 ```
 
 ### To update the list of requirements

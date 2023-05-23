@@ -3,6 +3,7 @@ from process_gpt import git_repo_reader, load_docs, parse_into_nodes, add_to_doc
 import os
 import streamlit as st
 
+
 def get_files_and_folders(directory):
     return os.listdir(directory)
 
@@ -42,6 +43,9 @@ def load_repo_from_github(git_url):
     st.write(f"Loading the repository {repo_name}...")
     documents= git_repo_reader(repo_owner, repo_name)
     st.write("Repository loaded.")
+    print(f'Number of documents: {len(documents)}')
+    return documents
+
 
 def parse_into_nodes_and_define_indexes(documents):
     # parse into nodes

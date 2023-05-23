@@ -19,6 +19,7 @@ from llama_index.storage.storage_context import StorageContext
 from llama_index import SimpleDirectoryReader, ServiceContext, LLMPredictor
 from llama_index import GPTVectorStoreIndex, GPTListIndex, GPTSimpleKeywordTableIndex
 from langchain.chat_models import ChatOpenAI
+from langchain.text_splitter import RecursiveChararacterTextSplitter
 
 from dotenv import load_dotenv
 
@@ -48,6 +49,13 @@ def load_docs(repo_url):
     #index = GPTVectorStoreIndex.from_documents(docs)
 
     #index.query("Explain each LlamaIndex class?")
+
+def chunk_data_into_smaller_docs(documents):
+    """Chunk data into smaller documents"""
+    text_splitter = RecursiveChararacterTextSplitter(chunk_size=1024, chunk_overlap=0)
+    texts = text_splitter.split_documents(documents)
+    print("Number of texts: ", len(texts))
+
 
 def parse_into_nodes(documents):
     """Parse documents into nodes"""
