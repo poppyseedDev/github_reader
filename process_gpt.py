@@ -27,11 +27,12 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-def git_repo_reader(repo_url):
+def git_repo_reader(repo_owner, repo_url):
     """Read a git repository"""
     reader = GithubRepositoryReader(
-        owner = "kodadot",
+        owner = repo_owner,
         repo=repo_url,
+        verbose=True,
         github_token=GITHUB_TOKEN,
         ignore_directories=[".git", ".github", "docs", "tests", "examples", "node_modules", "dist"],
     )

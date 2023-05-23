@@ -1,11 +1,12 @@
 from file_processing import clone_github_repo
 from process_gpt import git_repo_reader, load_docs, parse_into_nodes, add_to_docsstore, define_multiple_indexes, test_some_queries
 import os
+import streamlit as st
 
 def get_files_and_folders(directory):
     return os.listdir(directory)
 
-def run_main():
+def clone_a_repo_or_not():
     clone_or_no = input("Do you want to clone a repository? (y/n)")
     if clone_or_no == "y":
         # clone repo
@@ -30,11 +31,19 @@ def run_main():
         list_index, vector_index, keyword_table_index = define_multiple_indexes(nodes, docstore)
         test_some_queries(list_index, vector_index, keyword_table_index)
 
-def main():
-    print("Loading the repository...")
-    documents= git_repo_reader("uniquery")
-    print("Repository loaded.")
 
+def parse_git_url(git_url):
+    (repo_owner, repo_name) = git_url.split("/")[-2:]
+    return (repo_owner, repo_name)
+    
+
+def load_repo_from_github(git_url):
+    (repo_owner, repo_name) = parse_git_url(git_url)
+    st.write(f"Loading the repository {repo_name}...")
+    documents= git_repo_reader(repo_owner, repo_name)
+    st.write("Repository loaded.")
+
+def parse_into_nodes_and_define_indexes(documents):
     # parse into nodes
     nodes = parse_into_nodes(documents)
     docstore = add_to_docsstore(nodes)
@@ -42,4 +51,9 @@ def main():
     test_some_queries(list_index, vector_index, keyword_table_index)
 
 
-    
+def main():
+    st.title("💻🦾 Load a GitHub repository")
+    git_url = st.text_input("Enter the GitHub URL of the repository: ")
+
+    if git_url:
+        load_repo_from_github(git_url)
