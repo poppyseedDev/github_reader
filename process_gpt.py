@@ -48,6 +48,7 @@ def chunk_data_into_smaller_docs(documents):
     text_splitter = RecursiveChararacterTextSplitter(chunk_size=1024, chunk_overlap=0)
     texts = text_splitter.split_documents(documents)
     print("Number of texts: ", len(texts))
+    return texts
 
 
 def parse_into_nodes(documents):
