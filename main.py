@@ -1,14 +1,13 @@
 from create_embeddings import create_embeddings, create_pinecone_index, test_pinecone
 import streamlit as st
-from streamlit_interface import load_repo_from_github
+from streamlit_interface import StreamlitInterface
+from process_gpt import chunk_data_into_smaller_docs
 
 def main():
-    st.title("💻🦾 Load a GitHub repository")
-    git_url = st.text_input("Enter the GitHub URL of the repository: ")
-
-    if git_url:
-        documents = load_repo_from_github(git_url)
-        
-        embeddings = create_embeddings()
-        create_pinecone_index(embeddings=embeddings, )
-        test_pinecone()
+    """Main function"""
+    documents = StreamlitInterface().start_interface()
+    texts = chunk_data_into_smaller_docs(documents)
+    
+    embeddings = create_embeddings()
+    create_pinecone_index(texts=texts, embeddings=embeddings)
+    test_pinecone()
