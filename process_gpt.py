@@ -50,3 +50,13 @@ def test_some_queries(list_index, vector_index, keyword_table_index):
 
         response = query_engine.query(input_test) 
         print(response)
+
+def gpt_answer(docs, query):
+    #llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
+
+    llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY)
+    #input = "Query: " + query + "\n" + "Context: "
+    chain = load_qa_chain(llm, chain_type="stuff")
+    answer = chain.run(input_documents=docs, question=query)
+    return answer
+
