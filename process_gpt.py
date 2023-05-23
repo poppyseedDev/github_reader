@@ -5,13 +5,6 @@ import os
 from llama_index.readers.base import BaseReader
 #from llama_index import download_loader, GPTVectorStoreIndex
 import pickle
-from llama_index.readers.github_readers.github_repository_reader import GithubRepositoryReader
-from llama_index.readers.github_readers.github_api_client import (
-    GitBranchResponseModel,
-    GitCommitResponseModel,
-    GithubClient,
-    GitTreeResponseModel,
-)
 from llama_index import SimpleDirectoryReader, ServiceContext, LLMPredictor
 from llama_index.node_parser import SimpleNodeParser
 from llama_index.storage.docstore import SimpleDocumentStore
@@ -19,38 +12,11 @@ from llama_index.storage.storage_context import StorageContext
 from llama_index import SimpleDirectoryReader, ServiceContext, LLMPredictor
 from llama_index import GPTVectorStoreIndex, GPTListIndex, GPTSimpleKeywordTableIndex
 from langchain.chat_models import ChatOpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter, MarkdownTextSplitter, TextSplitter
+from git import Repo
+from langchain.document_loaders import GitLoader
 
-
-from load_env_var import GITHUB_TOKEN, OPENAI_API_KEY
-
-def git_repo_reader(repo_owner, repo_url):
-    """Read a git repository"""
-    reader = GithubRepositoryReader(
-        owner = repo_owner,
-        repo=repo_url,
-        verbose=True,
-        github_token=GITHUB_TOKEN,
-        ignore_directories=[".git", ".github", "docs", "tests", "examples", "node_modules", "dist"],
-    )
-    documents = reader.load_data(branch="main")
-    return documents
-
-def load_docs(repo_url):
-    """Load documents from a repository"""
-    reader = SimpleDirectoryReader(repo_url)
-    documents = reader.load_data()
-
-    return documents
-
-
-def chunk_data_into_smaller_docs(documents):
-    """Chunk data into smaller documents"""
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=0)
-    texts = text_splitter.split_documents(documents)
-    print("Number of texts: ", len(texts))
-    return texts
-
+from load_env_var import OPENAI_API_KEY
 
 def parse_into_nodes(documents):
     """Parse documents into nodes"""
