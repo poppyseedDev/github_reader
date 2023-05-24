@@ -21,6 +21,9 @@ from langchain.retrievers.self_query.base import SelfQueryRetriever
 
 from load_env_var import OPENAI_API_KEY
 
+# as a response to issue https://github.com/hwchase17/langchain/issues/4887 using Lark, which seems to solve the problem
+from lark import Lark, Transformer, v_args
+
 
 # def parse_into_nodes(documents):
 #     """Parse documents into nodes"""
@@ -64,9 +67,9 @@ class ChatGPT:
 
     def call_retriever(self, query):
         """Call retriever"""
-        if (self.retriever == None):
+        if self.retriever is None:
             raise Exception("Retriever is not initialized. Please call create_self_querying_retriever() first.")
-        results = self.retriever.get_relevant_documents(query)
+        results = self.retriever.get_relevant_documents(query=query)
         return results
 
     def test_some_queries(self, list_index, vector_index, keyword_table_index):

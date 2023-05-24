@@ -39,8 +39,6 @@ class StreamlitInterface:
             #test_chroma(docsearch=docsearch)
 
             # instantiate retriever
-            with st.expander("Sources"):
-                st.info(docsearch)
             chat_gpt = ChatGPT()
             chat_gpt.create_self_querying_retriever(
                 docsearch, 
@@ -48,17 +46,16 @@ class StreamlitInterface:
                 create_vec_store.return_metadata_field_info()
             )
             
-            # while True:
-            #     # Run gpt chatbot
-            #     query = st.text_input("Enter a question: ")
-            #     if query:
-            #         #relevant_docs = query_chroma(docsearch=docsearch, query=query)
-            #         #answer = gpt_answer(docs=relevant_docs, query=query)
-            #         #st.write(answer)
-            #         relevant_docs = chat_gpt.call_retriever(query=query)
+            # Run gpt chatbot
+            query = st.text_input("Enter a question: ")
+            if query:
+                #relevant_docs = query_chroma(docsearch=docsearch, query=query)
+                #answer = gpt_answer(docs=relevant_docs, query=query)
+                #st.write(answer)
+                relevant_docs = chat_gpt.call_retriever(query=query)
 
-            #         with st.expander("Sources"):
-            #             st.info(relevant_docs)
+                with st.expander("Sources"):
+                    st.info(relevant_docs)
 
 
 
