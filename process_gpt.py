@@ -52,6 +52,7 @@ class ChatGPT:
     def __init__(self):
         self.llm = OpenAI(temperature=0.4, openai_api_key=OPENAI_API_KEY)
         self.retriever = None
+        self.chat_history = []
         #self.llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
 
     def create_self_querying_retriever(self, vectorstore, document_content_description, metadata_field_info):
@@ -105,11 +106,21 @@ class ChatGPT:
 
         #chain = load_qa_chain(llm, chain_type="stuff")
         #answer = chain.run(input_documents=docs, question=query)
-        return answer
+        return answer["output_text"]
     
-    def gpt_conversational_retrieval_chain(self, docs, query):
+    def gpt_conversational_retrieval_chain(self):
         """Conversational retrieval chain"""
-        #retriever = db.as_retriever(search_type="similarity",
-        #                            search_kwargs={"k": 5})
-        
+        # retriever = db.as_retriever(search_type="similarity",
+        #                             search_kwargs={"k": 5})
+        qa = ConversationalRetrievalChain.from_llm(
+            llm=self.llm,
+            retriever=self.retriever,
+            return_source_documents=True
+        )
+        return qa
+
+    def gpt_question_remember_history(self, qa, query):
+        result = qa({"question": query, "chat_history": self.chat_history})
+        self.chat_history = [(query, result["answer"])]
+        return result
 

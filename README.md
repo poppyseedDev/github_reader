@@ -33,6 +33,11 @@ Using DuckDB in-memory for database. Data will be transient.
 ## Explaining how it works with the following medium article:
 Source: https://medium.com/p/188c6707cc5a
 
+**map_reduce**: It separates texts into batches (as an example, you can define batch size in llm=OpenAI(batch_size=5)), feeds each batch with the question to LLM separately, and comes up with the final answer based on the answers from each batch.
+**refine** : It separates texts into batches, feeds the first batch to LLM, and feeds the answer and the second batch to LLM. It refines the answer by going through all the batches.
+**map-rerank**: It separates texts into batches, feeds each batch to LLM, returns a score of how fully it answers the question, and comes up with the final answer based on the high-scored answers from each batch.
+
+
 OpenAI's Langchain provides various methods for performing question-answering tasks on external documents:
 
 1. **load_qa_chain**: It enables QA over multiple documents. However, there might be issues with long documents exceeding token limits. This issue can be solved using different chain types such as "map_reduce", "refine", and "map-rerank". Each of these approaches breaks the document into batches and processes them in different ways. Alternatively, RetrievalQA can be used to retrieve relevant text chunks before passing them into the language model.
