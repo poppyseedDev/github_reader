@@ -19,6 +19,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
+from langchain.chains import ConversationalRetrievalChain
 
 from load_env_var import OPENAI_API_KEY
 
@@ -95,6 +96,9 @@ class ChatGPT:
             "input_documents": docs,
             "question": query
             }, return_only_outputs=True)
+        
+        #chain = RetrievalQAWithSourcesChain.from_chain_type(OpenAI(temperature=0), chain_type="stuff", retriever=docsearch.as_retriever())
+
 
         #answerMe = RetrievalQA.from_chain_type(self.llm, chain_type="stuff", retriever=docs.as_retriever())
         #answer = answerMe.run(query)
@@ -102,4 +106,10 @@ class ChatGPT:
         #chain = load_qa_chain(llm, chain_type="stuff")
         #answer = chain.run(input_documents=docs, question=query)
         return answer
+    
+    def gpt_conversational_retrieval_chain(self, docs, query):
+        """Conversational retrieval chain"""
+        #retriever = db.as_retriever(search_type="similarity",
+        #                            search_kwargs={"k": 5})
+        
 
