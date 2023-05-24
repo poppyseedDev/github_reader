@@ -1,8 +1,8 @@
 import streamlit as st
-from load_into_docs import git_repo_reader, clone_git_repo, load_git_from_disk
-from process_gpt import gpt_answer, parse_into_nodes, add_to_docsstore, define_multiple_indexes, test_some_queries
-from load_into_docs import chunk_data_into_smaller_docs, chunk_data_based_on_markdown
-from create_vectorstore import create_embeddings, create_chroma_vectorstore, test_chroma, test_pinecone, query_chroma
+from load_into_docs import git_repo_reader, clone_git_repo, load_git_from_disk, chunk_data_based_on_markdown
+
+from process_gpt import ChatGPT
+from create_vectorstore import CreateVectorStore
 
 class StreamlitInterface:
     def __init__(self):
@@ -28,20 +28,37 @@ class StreamlitInterface:
             # st.write(texts)
             st.write("Chunking complete.")
 
-            embeddings = create_embeddings()
-            docsearch = create_chroma_vectorstore(texts=texts, embeddings=embeddings)
+            # create vectorstore
+            st.write("Creating index...")
+            create_vec_store = CreateVectorStore()
+            docsearch = create_vec_store.create_chroma_vectorstore(texts=texts)
+
+            #embeddings = create_embeddings()
+            #docsearch = create_chroma_vectorstore(texts=texts, embeddings=embeddings)
             st.write("Index created.")
             #test_chroma(docsearch=docsearch)
 
-            # Run gpt chatbot
-            query = st.text_input("Enter a question: ")
-            if query:
-                relevant_docs = query_chroma(docsearch=docsearch, query=query)
-                #answer = gpt_answer(docs=relevant_docs, query=query)
-                #st.write(answer)
+            # instantiate retriever
+            with st.expander("Sources"):
+                st.info(docsearch)
+            chat_gpt = ChatGPT()
+            chat_gpt.create_self_querying_retriever(
+                docsearch, 
+                create_vec_store.return_document_content_description(), 
+                create_vec_store.return_metadata_field_info()
+            )
+            
+            # while True:
+            #     # Run gpt chatbot
+            #     query = st.text_input("Enter a question: ")
+            #     if query:
+            #         #relevant_docs = query_chroma(docsearch=docsearch, query=query)
+            #         #answer = gpt_answer(docs=relevant_docs, query=query)
+            #         #st.write(answer)
+            #         relevant_docs = chat_gpt.call_retriever(query=query)
 
-                with st.expander("Sources"):
-                    st.info(relevant_docs)
+            #         with st.expander("Sources"):
+            #             st.info(relevant_docs)
 
 
 
