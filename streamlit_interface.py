@@ -52,12 +52,11 @@ class StreamlitInterface:
                 #relevant_docs = query_chroma(docsearch=docsearch, query=query)
                 #answer = gpt_answer(docs=relevant_docs, query=query)
                 #st.write(answer)
-                relevant_docs = chat_gpt.call_retriever(query=query)
+                relevant_docs = chat_gpt.call_retriever(query)
 
-                with st.expander("Sources"):
-                    st.info(relevant_docs)
-
-
+                for doc in relevant_docs:
+                    with st.expander(doc.metadata["file_name"]):
+                        st.info(doc.page_content)
 
     def parse_git_url(self, git_url):
         """Parse a git URL into the owner and repo name"""
