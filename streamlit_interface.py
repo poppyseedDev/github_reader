@@ -2,7 +2,7 @@ import streamlit as st
 from load_into_docs import git_repo_reader, clone_git_repo, load_git_from_disk
 from process_gpt import gpt_answer, parse_into_nodes, add_to_docsstore, define_multiple_indexes, test_some_queries
 from load_into_docs import chunk_data_into_smaller_docs, chunk_data_based_on_markdown
-from create_embeddings import create_embeddings, create_chroma_index, test_chroma, test_pinecone, query_chroma
+from create_vectorstore import create_embeddings, create_chroma_vectorstore, test_chroma, test_pinecone, query_chroma
 
 class StreamlitInterface:
     def __init__(self):
@@ -25,21 +25,23 @@ class StreamlitInterface:
             st.write("Chunking documents into smaller chunks...")
             #texts = chunk_data_into_smaller_docs(documents)
             texts = chunk_data_based_on_markdown(documents)
-            st.write(texts)
+            # st.write(texts)
             st.write("Chunking complete.")
 
-    
             embeddings = create_embeddings()
-            docsearch = create_chroma_index(texts=texts, embeddings=embeddings)
+            docsearch = create_chroma_vectorstore(texts=texts, embeddings=embeddings)
             st.write("Index created.")
             #test_chroma(docsearch=docsearch)
 
             # Run gpt chatbot
             query = st.text_input("Enter a question: ")
             if query:
-                query_chroma(docsearch=docsearch, query=query)
-                answer = gpt_answer(docs=docsearch, query=query)
-                st.write(answer)
+                relevant_docs = query_chroma(docsearch=docsearch, query=query)
+                #answer = gpt_answer(docs=relevant_docs, query=query)
+                #st.write(answer)
+
+                with st.expander("Sources"):
+                    st.info(relevant_docs)
 
 
 

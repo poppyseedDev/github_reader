@@ -56,7 +56,7 @@ def test_some_queries(list_index, vector_index, keyword_table_index):
 def gpt_answer(docs, query):
     #llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
     llm = OpenAI(temperature=0.4, openai_api_key=OPENAI_API_KEY)
-    answerMe = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=docs.as_retriever())
+    answerMe = RetrievalQA.from_chain_type(llm, chain_type="stuff", retriever=docs.as_retriever())
     answer = answerMe.run(query)
 
     #chain = load_qa_chain(llm, chain_type="stuff")
