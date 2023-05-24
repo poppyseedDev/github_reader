@@ -53,6 +53,8 @@ class StreamlitInterface:
                 #answer = gpt_answer(docs=relevant_docs, query=query)
                 #st.write(answer)
                 relevant_docs = chat_gpt.call_retriever(query)
+                gpt_answer = chat_gpt.gpt_answer(relevant_docs, query)
+                st.write(gpt_answer)
 
                 for doc in relevant_docs:
                     with st.expander(doc.metadata["file_name"]):

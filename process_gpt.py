@@ -18,6 +18,7 @@ from langchain.document_loaders import GitLoader
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.retrievers.self_query.base import SelfQueryRetriever
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 
 from load_env_var import OPENAI_API_KEY
 
@@ -69,8 +70,8 @@ class ChatGPT:
         """Call retriever"""
         if self.retriever is None:
             raise Exception("Retriever is not initialized. Please call create_self_querying_retriever() first.")
-        results = self.retriever.get_relevant_documents(query=query)
-        return results
+        relevant_docs = self.retriever.get_relevant_documents(query=query)
+        return relevant_docs
 
     def test_some_queries(self, list_index, vector_index, keyword_table_index):
         """Test some queries"""
@@ -85,8 +86,18 @@ class ChatGPT:
             print(response)
 
     def gpt_answer(self, docs, query):
-        answerMe = RetrievalQA.from_chain_type(self.llm, chain_type="stuff", retriever=docs.as_retriever())
-        answer = answerMe.run(query)
+        chain = load_qa_with_sources_chain(
+            self.llm,
+            chain_type="stuff"
+        )
+        query = query
+        answer = chain({
+            "input_documents": docs,
+            "question": query
+            }, return_only_outputs=True)
+
+        #answerMe = RetrievalQA.from_chain_type(self.llm, chain_type="stuff", retriever=docs.as_retriever())
+        #answer = answerMe.run(query)
 
         #chain = load_qa_chain(llm, chain_type="stuff")
         #answer = chain.run(input_documents=docs, question=query)
