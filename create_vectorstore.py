@@ -32,7 +32,7 @@ class CreateVectorStore:
             ),
         ]
         self.document_content_description = "Information about the repository and its contents"
-        # TODO: Add a filedata sturcture to the document_content_description
+        # TODO: Add a filedata sturcture to the document_content_description add filename
 
     def return_metadata_field_info(self):
         """Return metadata field info"""
