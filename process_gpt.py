@@ -126,4 +126,3 @@ class ChatGPT:
         result = qa({"question": query, "chat_history": self.chat_history})
         self.chat_history = [(query, result["answer"])]
         return result
-

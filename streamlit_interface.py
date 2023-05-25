@@ -31,7 +31,6 @@ class StreamlitInterface:
             #embeddings = create_embeddings()
             #docsearch = create_chroma_vectorstore(texts=texts, embeddings=embeddings)
             st.write("Index created.")
-            #test_chroma(docsearch=docsearch)
 
             # instantiate retriever
             chat_gpt = ChatGPT()
@@ -40,7 +39,7 @@ class StreamlitInterface:
                 create_vec_store.return_document_content_description(), 
                 create_vec_store.return_metadata_field_info()
             )
-            
+
             qa = chat_gpt.gpt_conversational_retrieval_chain()
             
             # Run gpt chatbot
