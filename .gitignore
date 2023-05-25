@@ -1,6 +1,6 @@
 .env
 env
 __pycache__
-repos
+repos/*
 .venv
 .chroma
