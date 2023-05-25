@@ -40,7 +40,7 @@ class StreamlitInterface:
                 create_vec_store.return_document_content_description(), 
                 create_vec_store.return_metadata_field_info()
             )
-
+            
             qa = chat_gpt.gpt_conversational_retrieval_chain()
             
             # Run gpt chatbot

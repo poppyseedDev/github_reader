@@ -48,15 +48,19 @@ def clone_git_repo(git_url):
         branch = repo.head.reference
         return path_to_clone, branch
 
+def file_filter(file_path):
+    """Filter files"""
+    return file_path.endswith(".md")
+
 def load_git_from_disk(path_of_repo, branch):
     """Load git from disk"""
     #loader = GitLoader(
     #    repo_path=path_of_repo, branch=branch)
-    optional_filter = lambda file_path: file_path.endswith(".md")
     loader = GitLoader(
         repo_path=path_of_repo, 
         branch=branch,
-        file_filter=lambda file_path: file_path.endswith(".md"))
+        file_filter=lambda file_path: file_filter(file_path)
+    )
 
     data = loader.load()
     return data

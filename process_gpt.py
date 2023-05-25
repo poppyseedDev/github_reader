@@ -50,7 +50,7 @@ from lark import Lark, Transformer, v_args
 
 class ChatGPT:
     def __init__(self):
-        self.llm = OpenAI(temperature=0.4, openai_api_key=OPENAI_API_KEY)
+        self.llm = OpenAI(temperature=0.9, openai_api_key=OPENAI_API_KEY)
         self.retriever = None
         self.chat_history = []
         #self.llm_predictor_chatgpt = LLMPredictor(llm=ChatOpenAI(api_key=OPENAI_API_KEY, temperature=0, model_name="gpt-3.5-turbo"))
@@ -67,6 +67,11 @@ class ChatGPT:
             nable_limit=True,
             verbose=True
         )
+
+    def create_simple_retriever(self, vectorstore):
+        """Create simple retriever based on similartiy search"""
+        self.retriever = vectorstore.as_retriever(search_type="similarity",
+                            search_kwargs={"k": 5})
 
     def call_retriever(self, query):
         """Call retriever"""
@@ -110,8 +115,6 @@ class ChatGPT:
     
     def gpt_conversational_retrieval_chain(self):
         """Conversational retrieval chain"""
-        # retriever = db.as_retriever(search_type="similarity",
-        #                             search_kwargs={"k": 5})
         qa = ConversationalRetrievalChain.from_llm(
             llm=self.llm,
             retriever=self.retriever,
